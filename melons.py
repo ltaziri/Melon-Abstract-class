@@ -9,6 +9,8 @@ class AbstractMelonOrder(object):
         """Initialize melon order attributes"""
         self.species = species
         self.qty = qty
+        if self.qty > 100:
+            raise TooManyMelonsError
         self.shipped = False
         self.country_code = country_code
         self.base_price = 0
@@ -34,14 +36,10 @@ class AbstractMelonOrder(object):
         self.shipped = True
 
 
-
-
 class DomesticMelonOrder(AbstractMelonOrder):
     """A domestic (in the US) melon order."""
-    
-    # order_type = "domestic"
-    tax = 0.08
 
+    tax = 0.08
 
     def __init__(self, species, qty):
         """Initialize melon order with attributes"""
@@ -49,12 +47,9 @@ class DomesticMelonOrder(AbstractMelonOrder):
         super(DomesticMelonOrder, self).__init__(species, qty, "USA")
 
 
-    
-
-
 class InternationalMelonOrder(AbstractMelonOrder):
     """An international (non-US) melon order."""
-    # order_type = "international"
+    
     tax = 0.17
     
     def get_total(self):
@@ -83,3 +78,13 @@ class GovernmentMelonOrder(AbstractMelonOrder):
         """Set passed_inspection to true."""
 
         self.passed_inspection = True
+
+
+
+class TooManyMelonsError(ValueError):
+    """Customers cannot order more than 100 melons in one order."""
+    
+    def __init__(self):
+        super(TooManyMelonsError, self).__init__(self)
+        # return "Too Many Melons! Cannot order 101+ melons at a time."
+
