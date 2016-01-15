@@ -10,7 +10,7 @@ class AbstractMelonOrder(object):
         self.species = species
         self.qty = qty
         if self.qty > 100:
-            raise TooManyMelonsError
+            raise TooManyMelonsError()
         self.shipped = False
         self.country_code = country_code
         self.base_price = 0
@@ -84,7 +84,6 @@ class GovernmentMelonOrder(AbstractMelonOrder):
 class TooManyMelonsError(ValueError):
     """Customers cannot order more than 100 melons in one order."""
     
-    def __init__(self):
-        super(TooManyMelonsError, self).__init__(self)
-        # return "Too Many Melons! Cannot order 101+ melons at a time."
-
+    def __init__(self, msg ="Stop laundering money!"):
+        super(TooManyMelonsError, self).__init__(msg)
+        
