@@ -1,23 +1,31 @@
 """This file should have our order classes in it."""
 
+import random
+
 class AbstractMelonOrder(object):
     """Any melon order placed with UberMelon."""
 
-    def __init__(self, species, qty, country_code):
+    def __init__(self, species, qty, country_code, upcharge = 0):
         """Initialize melon order attributes"""
         self.species = species
         self.qty = qty
         self.shipped = False
         self.country_code = country_code
+        self.base_price = 0
+
+    def illegal_base_price_scheme(self):
+        """Choses a random price from $5-9 per melon."""
+
+        self.base_price += random.randint(5,9)
 
     def get_total(self):
         """Calculate price."""
-        base_price = 5
+        self.illegal_base_price_scheme()
 
         if self.species.lower() == "christmas":
-            base_price = base_price * 1.5
+            self.base_price = self.base_price * 1.5
         
-        total = (1 + self.tax) * self.qty * base_price
+        total = (1 + self.tax) * self.qty * self.base_price
         return round(total,2)
 
     def mark_shipped(self):
@@ -53,7 +61,8 @@ class InternationalMelonOrder(AbstractMelonOrder):
         """Add $3 to total if order contains less than 10 melons."""
         total = super(InternationalMelonOrder, self).get_total()
         if self.qty < 10:
-            return round(total + 3,2)
+            self.upcharge = 3.0
+            return round(total + self.upcharge,2)
         else:
             return round(total,2)
 
@@ -62,3 +71,15 @@ class InternationalMelonOrder(AbstractMelonOrder):
         """Return the country code."""
 
         return self.country_code
+
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """A Government melon order."""
+    
+    tax = 0.0
+    passed_inspection = False
+
+    def mark_inspected(self):
+        """Set passed_inspection to true."""
+
+        self.passed_inspection = True
