@@ -1,6 +1,7 @@
 """This file should have our order classes in it."""
 
 import random
+import datetime as dt
 
 class AbstractMelonOrder(object):
     """Any melon order placed with UberMelon."""
@@ -14,6 +15,8 @@ class AbstractMelonOrder(object):
         self.shipped = False
         self.country_code = country_code
         self.base_price = 0
+        self.order_date = dt.datetime.now()
+        
 
     def illegal_base_price_scheme(self):
         """Choses a random price from $5-9 per melon."""
