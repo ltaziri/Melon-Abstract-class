@@ -82,7 +82,7 @@ class GovernmentMelonOrder(AbstractMelonOrder):
     
     tax = 0.0
     passed_inspection = False
-
+git
     def mark_inspected(self):
         """Set passed_inspection to true."""
 
