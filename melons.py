@@ -15,13 +15,18 @@ class AbstractMelonOrder(object):
         self.shipped = False
         self.country_code = country_code
         self.base_price = 0
+        self.upcharge = upcharge
         self.order_date = dt.datetime.now()
+        self.rush_hour_charge = 0
         
-
     def illegal_base_price_scheme(self):
-        """Choses a random price from $5-9 per melon."""
+        """Chooses a random price from $5-9 per melon; adds rush hour charge if applicable."""
 
         self.base_price += random.randint(5,9)
+       
+        if self.order_date.weekday() < 6:
+            if self.order_date.hour in range(8,11):
+                self.rush_hour_charge += 4
 
     def get_total(self):
         """Calculate price."""
@@ -30,7 +35,8 @@ class AbstractMelonOrder(object):
         if self.species.lower() == "christmas":
             self.base_price = self.base_price * 1.5
         
-        total = (1 + self.tax) * self.qty * self.base_price
+        total = ((1 + self.tax) * self.qty * self.base_price) + self.rush_hour_charge
+        # print self.rush_hour_charge
         return round(total,2)
 
     def mark_shipped(self):
